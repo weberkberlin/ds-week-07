@@ -8,7 +8,31 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
 ```{r}
-plot(cars)
+library(RODBC)
+library(tidyverse)
+library(rvg)
+library(dplyr)
+library(xlsx)
+
+locale_ger <- locale(decimal_mark = ".")
+
+setwd("C:/Users/konra/tubCloud/Uni/20WiSe/DataScience/Daten_20_11_23")
+
+drt_trips <- read_delim("pave188b.drt_trips.csv.gz", delim = ";", locale = locale_ger, col_types = cols(personId = col_character()))
+
+all_trips <- read_delim("pave188b.output_trips.csv.gz", delim = ";", locale = locale_ger, col_types = cols(person = col_character()))
+
+ggplot(data = drt_trips, mapping = aes(x=fromX, y=fromY)) +
+  geom_point(size=0.2, alpha=0.1, color="#008080") +
+  coord_quickmap()
+
+ggplot(data = all_trips, mapping = aes(x=start_x, y=start_y)) +
+  geom_hex(binwidth=5000) +
+  geom_point(size=0.2, alpha=0.1, color="#008080")
+
+ggplot(all_trips) +
+  geom_histogram(mapping = aes(x=dep_time, fill = main_mode), binwidth = 2000)
+
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
